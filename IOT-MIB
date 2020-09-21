@@ -1,0 +1,267 @@
+IOT-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    -- OBJECT-TYPE, MODULE-IDENTITY, enterprises, Counter32, Gauge32 FROM SNMPv2-SMI
+    OBJECT-TYPE, MODULE-IDENTITY, Integer32, Counter32, enterprises FROM SNMPv2-SMI
+    -- DisplayString, TimeStamp FROM SNMPv2-TC;
+    DisplayString FROM SNMPv2-TC;
+
+iotopen MODULE-IDENTITY
+   LAST-UPDATED "202003220000Z"
+   ORGANIZATION "www.iotopen.se"
+   CONTACT-INFO    
+	 "postal:   IoT Open One AB
+                    Borgmastargatan 12
+                    116 29 Stockholm
+
+          email:    info@iotopen.se"
+
+    DESCRIPTION
+	"MIB for IoT Objects from IoT Open Lynx"
+
+    REVISION     "202003220000Z"
+    DESCRIPTION
+	"First beta of MIB"
+    REVISION     "201911150000Z"
+    DESCRIPTION
+	"Second draft"
+    REVISION     "201910060000Z"
+    DESCRIPTION
+	"First draft"
+
+   ::= { enterprises 55190 }
+
+--   mib-2        OBJECT IDENTIFIER ::= { mgmt 1 }
+  --  iotopen  OBJECT IDENTIFIER ::= { enterprises 55190 }
+   iot OBJECT IDENTIFIER ::= { iotopen 1 }
+
+   iotsystem OBJECT IDENTIFIER ::= { iot 1 }
+
+   iotinstallations OBJECT IDENTIFIER ::= { iot 2 }
+   iotfunctions OBJECT IDENTIFIER ::= { iot 3 }
+   iotdevices OBJECT IDENTIFIER ::= { iot 4 }
+
+systemName OBJECT-TYPE
+       SYNTAX DisplayString
+       MAX-ACCESS read-only
+       STATUS current
+       DESCRIPTION
+         "Name of IoT System."
+       ::= { iotsystem 1 }
+
+systemOwner OBJECT-TYPE
+       SYNTAX DisplayString
+       MAX-ACCESS read-only
+       STATUS current
+       DESCRIPTION
+         "Owner of system"
+       ::= { iotsystem  2 }
+
+systemSupportContact OBJECT-TYPE
+       SYNTAX DisplayString
+       MAX-ACCESS read-only
+       STATUS current
+       DESCRIPTION
+         "Contact for system support"
+       ::= { iotsystem  3 }
+
+
+iotInstallationTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF IotInstallationEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"Table of Installations from the IoT Open Lynx
+         platform."
+    ::= { iotinstallations 1 }
+
+iotInstallationEntry OBJECT-TYPE
+    SYNTAX      IotInstallationEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"An entry of information and data from a particular
+         Installation in the IoT Open Lynx platform"
+    INDEX   { iotInstallationId }
+    ::= {iotInstallationTable 1 }
+
+IotInstallationEntry ::= SEQUENCE {
+	iotInstallationId Integer32,
+	iotInstallationName OCTET STRING
+}
+
+iotInstallationId OBJECT-TYPE
+    SYNTAX      Integer32 (0..2147483647)
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"The ID of the Installation in IoT Open Lynx"
+    ::= { iotInstallationEntry 1 }
+
+iotInstallationName OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE(1..32))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+	"The Name of the Installation in IoT Open Lynx"
+    ::= { iotInstallationEntry 2 }
+
+
+iotFunctionTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF IotFunctionEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"Table of Functions from the IoT Open Lynx
+         platform."
+    ::= { iotfunctions 1 }
+
+iotFunctionEntry OBJECT-TYPE
+    SYNTAX      IotFunctionEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"An entry of information and data from a particular
+         Function in the IoT Open Lynx platform"
+    INDEX   { iotFunctionId }
+    ::= {iotFunctionTable 1 }
+
+IotFunctionEntry ::= SEQUENCE {
+	iotFunctionId Integer32,
+	iotFunctionName OCTET STRING,
+	iotFunctionInstallationRef Integer32,
+	iotFunctionDeviceRef Integer32,
+	iotFunctionValue Integer32,
+	iotFunctionValueTxt OCTET STRING,
+	iotFunctionMsg OCTET STRING,
+	iotFunctionTimestamp Integer32,
+	iotFunctionCount Counter32
+}
+
+iotFunctionId OBJECT-TYPE
+    SYNTAX      Integer32 (0..2147483647) 
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"The ID of the Function in IoT Open Lynx"
+    ::= { iotFunctionEntry 1 }
+
+iotFunctionName OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE(1..32))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+	"The Name of the Function in IoT Open Lynx"
+    ::= { iotFunctionEntry 2 }
+
+iotFunctionInstallationRef OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+	"The ID of the Installation this function belongs to"
+    ::= { iotFunctionEntry 3 }
+
+iotFunctionDeviceRef OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+	"The ID of the device this function belongs to"
+    ::= { iotFunctionEntry 4 }
+
+iotFunctionValue OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+	"The Value (multiplied by 100, truncated if needed
+        to integer value) of the Function in IoT Open Lynx"
+    ::= { iotFunctionEntry 5 }
+
+iotFunctionValueTxt OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE(1..32))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+	"The Value in TXT (decimal point) of the Function in
+	IoT Open Lynx"
+    ::= { iotFunctionEntry 6 }
+
+iotFunctionMsg OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE(1..32))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+	"The Value in the Msg Field of the data i IoT Open Lunx"
+    ::= { iotFunctionEntry 7 }
+
+iotFunctionTimestamp OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+	"The Timstamp of the Functions last updated time
+        in IoT Open Lynx"
+    ::= { iotFunctionEntry 8 }
+
+iotFunctionCount OBJECT-TYPE
+    SYNTAX      Counter32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+	"The number of measurements for this function in IoT
+        Open Lynx"
+    ::= { iotFunctionEntry 9 }
+
+
+iotDeviceTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF IotDeviceEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"Table of Devices from the IoT Open Lynx
+         platform."
+    ::= { iotdevices 1 }
+
+iotDeviceEntry OBJECT-TYPE
+    SYNTAX      IotDeviceEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"An entry of information and data from a particular
+         Device in the IoT Open Lynx platform"
+    INDEX   { iotDeviceId }
+    ::= {iotDeviceTable 1 }
+
+IotDeviceEntry ::= SEQUENCE {
+	iotDeviceId Integer32,
+	iotDeviceName OCTET STRING,
+	iotDeviceInstallationRef Integer32
+}
+
+iotDeviceId OBJECT-TYPE
+    SYNTAX     Integer32 (0..2147483647) 
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"The ID of the Device in IoT Open Lynx"
+    ::= { iotDeviceEntry 1 }
+
+iotDeviceName OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE(1..32))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+	"The Name of the Device in IoT Open Lynx"
+    ::= { iotDeviceEntry 2 }
+
+iotDeviceInstallationRef OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+	"The ID of the Installation this device belongs to"
+    ::= { iotDeviceEntry 3 }
+
+END
