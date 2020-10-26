@@ -7,7 +7,7 @@ IMPORTS
     DisplayString FROM SNMPv2-TC;
 
 iotopen MODULE-IDENTITY
-   LAST-UPDATED "202003220000Z"
+   LAST-UPDATED "202010260000Z"
    ORGANIZATION "www.iotopen.se"
    CONTACT-INFO    
 	 "postal:   IoT Open One AB
@@ -19,6 +19,9 @@ iotopen MODULE-IDENTITY
     DESCRIPTION
 	"MIB for IoT Objects from IoT Open Lynx"
 
+    REVISION     "202010260000Z"
+    DESCRIPTION
+	"Bug fix release"
     REVISION     "202010230000Z"
     DESCRIPTION
 	"Added iotFunctionType and rearanged the other in the table accordingly"
@@ -150,21 +153,23 @@ iotFunctionId OBJECT-TYPE
 	"The ID of the Function in IoT Open Lynx"
     ::= { iotFunctionEntry 1 }
 
-iotFunctionType OBJECT-TYPE
-    SYNTAX      OCTET STRING (SIZE(1..32))
-    MAX-ACCESS  read-only
-    STATUS      current
-    DESCRIPTION
-	"The Type of the Function in IoT Open Lynx"
-    ::= { iotFunctionEntry 2 }
-
 iotFunctionName OBJECT-TYPE
     SYNTAX      OCTET STRING (SIZE(1..32))
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION
 	"The Name of the Function in IoT Open Lynx"
+    ::= { iotFunctionEntry 2 }
+
+
+iotFunctionType OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE(1..32))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+	"The Type of the Function in IoT Open Lynx"
     ::= { iotFunctionEntry 3 }
+
 
 iotFunctionInstallationRef OBJECT-TYPE
     SYNTAX      Integer32
