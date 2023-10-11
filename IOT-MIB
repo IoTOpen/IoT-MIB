@@ -9,16 +9,19 @@ IMPORTS
 iotopen MODULE-IDENTITY
    LAST-UPDATED "202010260000Z"
    ORGANIZATION "www.iotopen.se"
-   CONTACT-INFO    
+   CONTACT-INFO
 	 "postal:   IoT Open One AB
-                    Borgmastargatan 12
-                    116 29 Stockholm
+                    Drottninggatan 67
+                    111 36 Stockholm
 
           email:    info@iotopen.se"
 
     DESCRIPTION
 	"MIB for IoT Objects from IoT Open Lynx"
 
+    REVISION     "202310110000Z"
+    DESCRIPTION
+	"Added TRAP. Changed address."
     REVISION     "202010260000Z"
     DESCRIPTION
 	"Bug fix release"
@@ -46,6 +49,9 @@ iotopen MODULE-IDENTITY
    iotinstallations OBJECT IDENTIFIER ::= { iot 2 }
    iotfunctions OBJECT IDENTIFIER ::= { iot 3 }
    iotdevices OBJECT IDENTIFIER ::= { iot 4 }
+   iotnotifications OBJECT IDENTIFIER ::= { iot 10 }
+   iotnotificationsprefix OBJECT IDENTIFIER ::= { iotnotifications 0 }
+   iotnotificationsobjects OBJECT IDENTIFIER ::= { iotnotifications 1 }
 
 systemName OBJECT-TYPE
        SYNTAX DisplayString
@@ -130,7 +136,7 @@ iotFunctionEntry OBJECT-TYPE
 	"An entry of information and data from a particular
          Function in the IoT Open Lynx platform"
     INDEX   { iotFunctionId }
-    ::= {iotFunctionTable 1 }
+    ::= { iotFunctionTable 1 }
 
 IotFunctionEntry ::= SEQUENCE {
 	iotFunctionId Integer32,
@@ -146,7 +152,7 @@ IotFunctionEntry ::= SEQUENCE {
 }
 
 iotFunctionId OBJECT-TYPE
-    SYNTAX      Integer32 (0..2147483647) 
+    SYNTAX      Integer32 (0..2147483647)
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
@@ -258,7 +264,7 @@ IotDeviceEntry ::= SEQUENCE {
 }
 
 iotDeviceId OBJECT-TYPE
-    SYNTAX     Integer32 (0..2147483647) 
+    SYNTAX     Integer32 (0..2147483647)
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION
@@ -280,5 +286,21 @@ iotDeviceInstallationRef OBJECT-TYPE
     DESCRIPTION
 	"The ID of the Installation this device belongs to"
     ::= { iotDeviceEntry 3 }
+
+iotNotificationText OBJECT-TYPE
+    SYNTAX		OCTET STRING
+    MAX-ACCESS  accessible-for-notify
+    STATUS      current
+    DESCRIPTION
+        "Textual representation of the event raising the notification"
+    ::= { iotnotificationsobjects 1 }
+
+iotNotificationAlarm NOTIFICATION-TYPE
+    OBJECTS     { iotNotificationText }
+    STATUS      current
+    DESCRIPTION
+	"IoT Notification Alarm trap. Needs a iotNotificationText
+         describing the notification"
+    ::= { iotnotificationsprefix 1 }
 
 END
